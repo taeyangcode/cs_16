@@ -56,64 +56,64 @@ DifferentInputs PROC USES ebx ecx edx,
 	value_2: DWORD,
 	value_3: DWORD
 
-	mov ebx, value_1
-	mov ecx, value_2
-	mov edx, value_3
+	mov ebx, value_1			; move value one into ebx
+	mov ecx, value_2			; move value two into ecx
+	mov edx, value_3			; move value three into edx
 
-	cmp ebx, ecx
-	jne NotEqual
+	cmp ebx, ecx				; if value one equals value two
+	jne NotEqual				; false -> jump NotEquals
 
-	cmp ecx, edx
-	jne NotEqual
+	cmp ecx, ed				; if value two equals value three
+	jne NotEqua				; false -> jump NotEquals
 
-	mov eax, 1
+	mov eax, 1				; value one == value two == value three -> eax := 1
 	ret
 
 NotEqual:
-	mov eax, 0
+	mov eax, 0				; one value is different -> eax := 0
 	ret
 DifferentInputs ENDP
 
 test_DifferenceInputs PROC
-	INVOKE DifferentInputs, 0, 0, 0
+	INVOKE DifferentInputs, 0, 0, 0		; expected output: eax = 1
 
-	INVOKE DifferentInputs, 1, 0, 0
+	INVOKE DifferentInputs, 1, 0, 0		; expected output: eax = 0
 
-	INVOKE DifferentInputs, 0, 1, 0
+	INVOKE DifferentInputs, 0, 1, 0		; expected output: eax = 0
 
-	INVOKE DifferentInputs, 0, 0, 1
+	INVOKE DifferentInputs, 0, 0, 1		; expected output: eax = 0
 
-	INVOKE DifferentInputs, 1, 0, 1
+	INVOKE DifferentInputs, 1, 0, 1		; expected output: eax = 0
 test_DifferenceInputs ENDP
 
 StrConcat PROC USES esi edi,
 	source: PTR BYTE,
 	target: PTR BYTE
 
-	mov esi, source
-	mov edi, target
+	mov esi, source				; move source pointer to esi
+	mov edi, target				; move target pointer to edi
 
-find_target_end:
-	cmp BYTE PTR [edi], 0
-	jz append_target
+find_target_end:				; find end of target string
+	cmp BYTE PTR [edi], 0			; if reached target end
+	jz append_target			; true -> jump to append
 
-	inc edi
-	jmp find_target_end
+	inc edi					; increment target pointer
+	jmp find_target_end			; loop find_target_end
 
-append_target:
-	cmp BYTE PTR [esi], 0
-	jz end_concat
+append_target:					; append source to target
+	cmp BYTE PTR [esi], 0			; if reached source end
+	jz end_concat				; true -> procedure complete
 
-	push esi
-	mov esi, [esi]
-	mov [edi], esi
-	pop esi
+	push esi				; save current source pointer location
+	mov esi, [esi]				; get value at source pointer location
+	mov [edi], esi				; move source value to target value
+	pop esi					; recover source pointer location
 
-	inc esi
-	inc edi
-	jmp append_target
+	inc esi					; increment source pointer
+	inc edi					; increment target pointer
+	jmp append_target			; loop append_target
 
-end_concat:
+end_concat:					; procedure complete
 	ret
 StrConcat ENDP
 
