@@ -12,3 +12,6 @@
 
 # visual studio
 .vs/
+
+# os specific files
+**/.DS_Store
