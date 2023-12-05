@@ -34,7 +34,7 @@ pipe_buffer BYTE PIPE, 4 DUP(SPACE), PIPE
 ; part 02
 triangle_buffer_01 BYTE SPACE, SPACE, FORWARD_SLASH, BACKWARD_SLASH, SPACE, SPACE
 triangle_buffer_02 BYTE SPACE, FORWARD_SLASH, SPACE, SPACE, BACKWARD_SLASH, SPACE
-triangle_buffer_03 BYTE FORWARD_SLASH, SPACE, SPACE, SPACE, SPACE, BACKWARD_SLASH 
+triangle_buffer_03 BYTE FORWARD_SLASH, 4 DUP(UNDERSCORE), BACKWARD_SLASH 
 
 ; part 03
 window_buffer BYTE PIPE, SPACE, 79, SPACE, SPACE, PIPE
@@ -82,30 +82,10 @@ part_01 PROC
 	ret
 part_01 ENDP
 
-print_slashes PROC USES eax,
-	p_x_position: WORD,
-	p_y_position: WORD,
-	slash_array: PTR BYTE
-
-	mov ax, p_x_position
-	mov xy_pos.X, ax
-	mov ax, p_y_position
-	mov xy_pos.Y, ax
-
-	INVOKE WriteConsoleOutputCharacter,
-		out_handle,
-		slash_array,
-		buffer_size,
-		xy_pos,
-		ADDR cells_written
-
-	ret
-print_slashes ENDP
-
 part_02 PROC
-	INVOKE print_slashes, 0, 0, ADDR triangle_buffer_01
-	INVOKE print_slashes, 0, 1, ADDR triangle_buffer_02
-	INVOKE print_slashes, 0, 2, ADDR triangle_buffer_03
+	INVOKE print_buffer, 0, 0, ADDR triangle_buffer_01
+	INVOKE print_buffer, 0, 1, ADDR triangle_buffer_02
+	INVOKE print_buffer, 0, 2, ADDR triangle_buffer_03
 
 	ret
 part_02 ENDP
@@ -240,7 +220,7 @@ main PROC
 
 	; please call procedures within here (after receiving handle, before ReadChar function call)
 	; call part_01
-	; call part_02
+	call part_02
 	; call part_03
 	; call part_04
 
