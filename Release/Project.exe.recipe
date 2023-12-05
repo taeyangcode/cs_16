@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\byeta\cs_16\Debug\Project.exe</FullPath>
+      <FullPath>C:\Users\byeta\cs_16\Release\Project.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
