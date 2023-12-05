@@ -94,9 +94,9 @@ part_02 ENDP
 
 part_03 PROC
 	; roof
-	INVOKE print_buffer, 0, 0, ADDR triangle_chimney_01	; print triangle top
-	INVOKE print_buffer, 0, 1, ADDR triangle_chimney_02	; print triangle middle
-	INVOKE print_buffer, 0, 2, ADDR triangle_buffer_03	; print triangle bottom
+	INVOKE print_buffer, 0, 0, ADDR triangle_chimney_01	; print roof with chimney
+	INVOKE print_buffer, 0, 1, ADDR triangle_chimney_02	; print roof with chimney
+	INVOKE print_buffer, 0, 2, ADDR triangle_buffer_03	; print roof
 
 	; house
 	INVOKE print_buffer, 0, 3, ADDR pipe_buffer		; print walls
