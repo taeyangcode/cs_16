@@ -37,6 +37,8 @@ triangle_buffer_02 BYTE SPACE, FORWARD_SLASH, SPACE, SPACE, BACKWARD_SLASH, SPAC
 triangle_buffer_03 BYTE FORWARD_SLASH, 4 DUP(UNDERSCORE), BACKWARD_SLASH 
 
 ; part 03
+triangle_chimney_01 BYTE SPACE, SPACE, FORWARD_SLASH, BACKWARD_SLASH, PIPE, SPACE
+triangle_chimney_02 BYTE SPACE, FORWARD_SLASH, SPACE, SPACE, PIPE, SPACE
 window_buffer BYTE PIPE, SPACE, 79, SPACE, SPACE, PIPE
 door_top_buffer BYTE PIPE, SPACE, SPACE, UNDERSCORE, UNDERSCORE, PIPE
 door_buffer BYTE PIPE, 2 DUP(UNDERSCORE), 3 DUP(PIPE)
@@ -92,7 +94,9 @@ part_02 ENDP
 
 part_03 PROC
 	; roof
-	INVOKE part_02						; use triangle as roof
+	INVOKE print_buffer, 0, 0, ADDR triangle_chimney_01	; print triangle top
+	INVOKE print_buffer, 0, 1, ADDR triangle_chimney_02	; print triangle middle
+	INVOKE print_buffer, 0, 2, ADDR triangle_buffer_03	; print triangle bottom
 
 	; house
 	INVOKE print_buffer, 0, 3, ADDR pipe_buffer		; print walls
@@ -220,7 +224,7 @@ main PROC
 	; please call procedures within here (after receiving handle, before ReadChar function call)
 	; call part_01
 	; call part_02
-	; call part_03
+	call part_03
 	; call part_04
 
 	call ReadChar				; call ReadChar function to preserve terminal stdout
