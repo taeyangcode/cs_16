@@ -224,7 +224,7 @@ main PROC
 	; please call procedures within here (after receiving handle, before ReadChar function call)
 	; call part_01
 	; call part_02
-	call part_03
+	; call part_03
 	; call part_04
 
 	call ReadChar				; call ReadChar function to preserve terminal stdout
