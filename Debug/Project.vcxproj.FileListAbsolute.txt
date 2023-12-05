@@ -2,3 +2,4 @@ C:\Users\T\Downloads\Project32_VS2022\Project32_VS2022\Debug\Project.exe
 C:\Users\T\Personal\school\cs_16\Debug\Project.exe
 C:\Users\byeta\school\cs_16\Debug\Project.exe
 C:\Users\byeta\cs_16\Debug\Project.exe
+C:\Users\T\Personal\cs_16\Debug\Project.exe
