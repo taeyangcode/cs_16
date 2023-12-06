@@ -67,22 +67,22 @@ prompt_imaginary BYTE "Imaginary root: ", 0
 ; -2664.0
 
 part_03 PROC USES eax edx
-	fld y
-	fld x
+	fld y					; push y to stack
+	fld x					; push x to stack
 
-	fcomi ST(0), ST(1)
+	fcomi ST(0), ST(1)			; compare x to y
 
-	jb LESS
-	jmp GEQ
+	jb LESS					; if x < y -> jmp LESS
+	jmp GEQ					; else -> jmp GEQ
 	
 LESS:
 	mov edx, OFFSET less_string
-	call WriteString
-	ret
+	call WriteString			; write: X is lower
+	ret					; exit function
 
 GEQ:
-	mov edx, OFFSET geq_string
-	call WriteString
+	mov edx, OFFSET geq_string		; write: X is greater
+	call WriteString			; exit function
 	ret
 
 	ret
@@ -90,127 +90,128 @@ part_03 ENDP
 
 part_04 PROC USES edx
 	mov edx, OFFSET prompt_a
-	call WriteString
+	call WriteString			; prompt user for a
 
-	call ReadFloat
-	fstp co_a
+	call ReadFloat				; read value onto stack
+	fstp co_a				; move value into co_a and pop stack
 
 	mov edx, OFFSET prompt_b
-	call WriteString
+	call WriteString			; prompt user for b
 
-	call ReadFloat
-	fstp co_b
+	call ReadFloat				; read value onto stack
+	fstp co_b				; move value into co_b and pop stack
 
 	mov edx, OFFSET prompt_c
-	call WriteString
+	call WriteString			; prompt user for c
 
-	call ReadFloat
-	fstp co_c
+	call ReadFloat				; read value onto stack
+	fstp co_c				; move value into co_c and pop stack
 
-	fld co_a
-	fild i_two
-	fmul
-	fstp two_a
+						; compute: 2*a
+	fld co_a				; push a onto stack
+	fild i_two				; push integer 2 onto stack
+	fmul					; 2*a
+	fstp two_a				; move 2*a into two_a for later use and pop stack (stack is empty)
 
-	fld co_b
-	fld co_b
-	fmul
+						; compute: b^(2)
+	fld co_b				; push b
+	fld co_b				; push b
+	fmul					; multiply to get: b^(2) on stack
 
-	fld co_c
-	fld co_a
-	fmul
+	fld co_c				; push c
+	fld co_a				; push a
+	fmul					; multiply to get: a * c on stack
 
-	fild i_four
-	fmul
+	fild i_four				; push integer 4 onto stack
+	fmul					; multiply to get: 4*a*c on stack
 
-	fsub
+	fsub					; subtract: 4*a*c, from: b^(2)
 
-	fild i_zero
-	fcomi ST(0), ST(1)
-	fstp ST(0) ; popping 0
+						; now we determine if we have real or imaginary solutions
+	fild i_zero				; push integer 0 onto stack
+	fcomi ST(0), ST(1)			; compare 0 and computed value above
+	fstp ST(0)				; pop temporary 0
 
-	ja IMAGINARY_ROOTS
-	jmp REAL_ROOTS
+	ja IMAGINARY_ROOTS			; if 0 > computed value -> we have imaginary solutions
+	jmp REAL_ROOTS				; else -> we have real solutions
 
 IMAGINARY_ROOTS:
-	fchs
-	fsqrt
-	fst square_root_value
+	fchs					; change the sign of the negative value computed from: b^(2) - 4*a*c
+	fsqrt					; square root value
+	fst square_root_value			; move square root value into square_root_value
 
-	fld two_a
+						; now compute imaginary portion of solution
+	fld two_a				; push 2*a onto stack
 
-	fdiv
+	fdiv					; divide: 2*a, from: square root value -> imaginary portion calculated
 
-	fld co_b
-	fchs
+	fld co_b				; push b onto stack
+	fchs					; b -> -(b)
 
-	fld two_a
+	fld two_a				; push 2*a onto stack
 
-	fdiv
+	fdiv					; calcuate: (-b) / (2*a) -> real portion calculated
 
-	fst b_two_a
+	fst b_two_a				; move result into b_two_a
 
 	mov edx, OFFSET prompt_imaginary
-	call WriteString
+	call WriteString			; write imaginary solution prompt
 
-	call WriteFloat
-	fstp ST(0)
-	call WriteFloat
+	call WriteFloat				; write real portion
+	fstp ST(0)				; pop real portion from stack
+	call WriteFloat				; write imaginary portion
 	mov al, 'i'
-	call WriteChar
+	call WriteChar				; write 'i' to show the required multiplication with i 
 
-	call CrlF
+	call CrlF				; new line
 
-	fchs
-	fld b_two_a
+	fchs					; change sign of imaginary portion to get second solution
+	fld b_two_a				; push b_two_a onto stack again
 
-	call WriteString
+	call WriteString			; same process as before but writing the other imaginary solution
 	call WriteFloat
 	fstp ST(0)
 	call WriteFloat
 	call WriteChar
 
-	ret
+	ret					; exit function
 
 REAL_ROOTS:
-	fsqrt
-	fst square_root_value
+	fsqrt					; since: (b^2) - 4*a*c, is real square root
+	fst square_root_value			; move value into square_root_value
 
-	fld co_b
-	fchs
+	fld co_b				; push b onto stack
+	fchs					; b -> -(b)
 
-	fadd
+	fadd					; compute: (-b) + square_root_value
 
-	fld co_a
-	fild i_two
+	fld two_a				; push 2*a onto stack
 
-	fmul
-	fdiv
+	fdiv					; compute: ((-b) + square_root_value) / (2*a)
 
 	mov edx, OFFSET prompt_real
-	call WriteString
-	call WriteFloat
-	call CrlF
+	call WriteString			; write real solution prompt
+	call WriteFloat				; write first real solution
+	call CrlF				; new line
 
-	fstp ST(0)
+	fstp ST(0)				; pop solution from stack
 
-	fld co_b
-	fchs
+						; now calculate second solution
+	fld co_b				; push b onto sstack
+	fchs					; b -> -(b)
 
-	fld square_root_value
+	fld square_root_value			; push square root value onto stack
 
-	fsub
+	fsub					; compute: (-b) - square_root_value
 
-	fld co_a
-	fild i_two
+	fld two_a				; push 2*a onto stack
 
-	fmul
-	fdiv
+	fdiv					; copmute second solution
 
-	call WriteString
-	call WriteFloat
+	call WriteString			; write real solution prompt
+	call WriteFloat				; write second solution
 
-	ret
+	ret					; exit function
 part_04 ENDP
 
 main PROC
